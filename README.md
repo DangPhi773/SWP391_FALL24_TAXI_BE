@@ -5,6 +5,7 @@ Project Khung
 - Node
 - VITE/ React JS
 - Apache Maven
+- Thymeleaf
 - Tools : Intellij Idea, Visual Studio.
 - Coding convention : 
 Java:
