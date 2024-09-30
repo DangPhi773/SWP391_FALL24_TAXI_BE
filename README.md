@@ -1,12 +1,12 @@
 Project Khung
 - JDK 19
 - MS SQL Server
-- Springboot
+- Springboot 3
 - Node
 - VITE/ React JS
 - Apache Maven
 - Thymeleaf
-- Tools : Intellij Idea, Visual Studio.
+- Tools : Intellij Idea, Visual Code.
 - Coding convention : 
 Java:
 Naming conventions:
