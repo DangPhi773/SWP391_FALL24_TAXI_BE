@@ -4,6 +4,7 @@ import com.example.swp391_fall24_taxi_be.dto.response.ComplaintDTO;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.List;
@@ -37,13 +38,15 @@ public class ComplaintServiceImpl implements ComplaintService{
                 .collect(Collectors.toList());
     }
 
-//    @Override
-//    public List<ComplaintDTO> searchBySubmittedDate(LocalDateTime submittedDate) {
-//        List<Complaint> complaints = complaintRepository.findBySubmittedDateContaining(submittedDate);
-//        return complaints.stream()
-//                .map(loc -> new ComplaintDTO(loc.getComplaintId(), loc.getDescription(), loc.getSubmittedDate(),loc.getStatus()))
-//                .collect(Collectors.toList());
-//    }
+    @Override
+    public List<ComplaintDTO> searchBySubmittedDate(LocalDateTime submittedDate) {
+        LocalDateTime startOfDay = submittedDate.toLocalDate().atStartOfDay();
+        LocalDateTime endOfDay = submittedDate.toLocalDate().atTime(LocalTime.MAX);
+        List<Complaint> complaints = complaintRepository.findBySubmittedDateBetween(startOfDay, endOfDay);
+        return complaints.stream()
+                .map(loc -> new ComplaintDTO(loc.getComplaintId(), loc.getDescription(), loc.getSubmittedDate(),loc.getStatus()))
+                .collect(Collectors.toList());
+    }
 
     @Override
     public List<ComplaintDTO> searchByStatus(String status) {
@@ -56,12 +59,22 @@ public class ComplaintServiceImpl implements ComplaintService{
 
     @Override
     public ComplaintDTO addComplaint(ComplaintDTO complaintDTO) {
-        return null;
+        Complaint complaint = new Complaint();
+        complaint.setDescription(complaintDTO.getDescription());
+        complaint.setSubmittedDate(complaintDTO.getSubmittedDate());
+        complaint.setStatus(complaintDTO.getStatus());
+        complaintRepository.save(complaint);
+        return new ComplaintDTO(complaint.getComplaintId(),complaint.getDescription(),complaint.getSubmittedDate(),complaint.getStatus());
     }
 
     @Override
-    public ComplaintDTO updateComplaint(Long id, ComplaintDTO ComplaintDTO) {
-        return null;
+    public ComplaintDTO updateComplaint(Long id, ComplaintDTO complaintDTO) {
+        Complaint complaint = complaintRepository.findById(id).orElseThrow(() -> new RuntimeException("Complaint not found"));
+        complaint.setDescription(complaintDTO.getDescription());
+        complaint.setSubmittedDate(complaintDTO.getSubmittedDate());
+        complaint.setStatus(complaintDTO.getStatus());
+        complaintRepository.save(complaint);
+        return new ComplaintDTO(complaint.getComplaintId(),complaint.getDescription(),complaint.getSubmittedDate(),complaint.getStatus());
     }
 
     @Override

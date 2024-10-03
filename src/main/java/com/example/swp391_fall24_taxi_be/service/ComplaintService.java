@@ -10,9 +10,9 @@ import java.util.List;
 public interface ComplaintService {
     List<ComplaintDTO> getAllComplaints();
     List<ComplaintDTO> searchByDescription(String description);
-//    List<ComplaintDTO> searchBySubmittedDate(LocalDateTime submittedDate);
+    List<ComplaintDTO> searchBySubmittedDate(LocalDateTime submittedDate);
     List<ComplaintDTO> searchByStatus(String status);
     ComplaintDTO addComplaint(ComplaintDTO complaintDTO);
-    ComplaintDTO updateComplaint(Long id, ComplaintDTO ComplaintDTO);
+    ComplaintDTO updateComplaint(Long id, ComplaintDTO complaintDTO);
     void deleteComplaint(Long id);
 }

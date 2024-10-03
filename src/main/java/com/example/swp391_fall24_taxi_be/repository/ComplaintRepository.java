@@ -11,6 +11,6 @@ import java.util.List;
 
 public interface ComplaintRepository extends JpaRepository<Complaint, Long> {
     List<Complaint> findByDescriptionContaining(String description);
-//    List<Complaint> findBySubmittedDateContaining(LocalDateTime submittedDate);
+    List<Complaint> findBySubmittedDateBetween(LocalDateTime startDateTime, LocalDateTime endDateTime);
     List<Complaint> findByStatusContaining(String status);
 }
