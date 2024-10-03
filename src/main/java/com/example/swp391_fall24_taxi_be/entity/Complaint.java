@@ -3,8 +3,15 @@ package com.example.swp391_fall24_taxi_be.entity;
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.AllArgsConstructor;
+
 
 @Entity
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class Complaint {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
