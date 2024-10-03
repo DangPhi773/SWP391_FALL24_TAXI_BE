@@ -56,3 +56,4 @@
 //        return Arrays.asList(new SecurityReference("JWT", authorizationScopes));
 //    }
 //}
+
