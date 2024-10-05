@@ -30,10 +30,12 @@ public class ComplaintController {
         return ResponseEntity.ok(complaints);
     }
 
-    @GetMapping("/search/submittedDate")
+    @GetMapping("/searchBySubmittedDate")
     public ResponseEntity<List<ComplaintDTO>> searchBySubmittedDate(
-            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime submittedDate) {
-        List<ComplaintDTO> complaints = complaintService.searchBySubmittedDate(submittedDate);
+            @RequestParam("startDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime startDate,
+            @RequestParam("endDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime endDate) {
+
+        List<ComplaintDTO> complaints = complaintService.searchBySubmittedDate(startDate, endDate);
         return ResponseEntity.ok(complaints);
     }
 
@@ -49,9 +51,15 @@ public class ComplaintController {
         return ResponseEntity.ok(newComplaint);
     }
 
-    @PutMapping("/update/{id}")
-    public ResponseEntity<ComplaintDTO> updateComplaint(@PathVariable Long id, @RequestBody ComplaintDTO complaintDTO) {
-        ComplaintDTO updatedComplaint = complaintService.updateComplaint(id, complaintDTO);
+    @PutMapping("/updateByUser/{id}")
+    public ResponseEntity<ComplaintDTO> updateComplaintByUser(@PathVariable Long id, @RequestBody ComplaintDTO complaintDTO) {
+        ComplaintDTO updatedComplaint = complaintService.updateComplaintByUser(id, complaintDTO);
+        return ResponseEntity.ok(updatedComplaint);
+    }
+
+    @PutMapping("/updateByStaff/{id}")
+    public ResponseEntity<ComplaintDTO> updateComplaintByStaff(@PathVariable Long id, @RequestBody ComplaintDTO complaintDTO) {
+        ComplaintDTO updatedComplaint = complaintService.updateComplaintByStaff(id, complaintDTO);
         return ResponseEntity.ok(updatedComplaint);
     }
 
