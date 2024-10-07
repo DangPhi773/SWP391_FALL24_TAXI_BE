@@ -1,5 +1,5 @@
 package com.example.swp391_fall24_taxi_be.service;
-import com.example.swp391_fall24_taxi_be.dto.request.LocationPageLoad;
+
 import com.example.swp391_fall24_taxi_be.dto.response.LocationDTO;
 
 import java.util.List;
