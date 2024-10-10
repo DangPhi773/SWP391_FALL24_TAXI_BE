@@ -22,7 +22,7 @@ public class ComplaintServiceImpl implements ComplaintService {
 
     @Override
     public List<ComplaintDTO> getAllComplaints() {
-        List<Complaint> complaints = complaintRepository.findByStatus("active");
+        List<Complaint> complaints = complaintRepository.findAll();
         return complaints.stream()
                 .map(loc -> new ComplaintDTO(loc.getComplaintId(), loc.getDescription(), loc.getSubmittedDate(), loc.getStatus()))
                 .collect(Collectors.toList());
@@ -76,7 +76,9 @@ public class ComplaintServiceImpl implements ComplaintService {
     @Override
     public ComplaintDTO updateComplaintByStaff(Long id, ComplaintDTO complaintDTO) {
         Complaint complaint = complaintRepository.findById(id).orElseThrow(() -> new RuntimeException("Complaint not found"));
-        complaint.setDescription(complaintDTO.getDescription());
+        if (complaintDTO.getDescription() != null && !complaintDTO.getDescription().trim().isEmpty()) {
+            complaint.setDescription(complaintDTO.getDescription());
+        }
         complaint.setSubmittedDate(ZonedDateTime.now(VIETNAM_ZONE).toLocalDateTime());
         complaint.setStatus(complaintDTO.getStatus());
         complaintRepository.save(complaint);
