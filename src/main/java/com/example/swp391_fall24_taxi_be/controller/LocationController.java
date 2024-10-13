@@ -14,7 +14,7 @@ public class LocationController {
     @Autowired
     private LocationService locationService;
 
-    @GetMapping
+    @GetMapping("/getAll")
     public List<LocationDTO> getAllLocations() {
         return locationService.getAllLocations();
     }
@@ -24,19 +24,19 @@ public class LocationController {
         return locationService.searchByName(name);
     }
 
-    @PostMapping
+    @PostMapping("/add")
     public ResponseEntity<LocationDTO> addLocation(@RequestBody LocationDTO locationDTO) {
         LocationDTO createdLocation = locationService.addLocation(locationDTO);
         return ResponseEntity.ok(createdLocation);
     }
 
-    @PutMapping("/{id}")
+    @PutMapping("/update/{id}")
     public ResponseEntity<LocationDTO> updateLocation(@PathVariable Long id, @RequestBody LocationDTO locationDTO) {
         LocationDTO updatedLocation = locationService.updateLocation(id, locationDTO);
         return ResponseEntity.ok(updatedLocation);
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("delete/{id}")
     public ResponseEntity<Void> deleteLocation(@PathVariable Long id) {
         locationService.deleteLocation(id);
         return ResponseEntity.noContent().build();
