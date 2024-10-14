@@ -36,7 +36,7 @@ public class LocationController {
         return ResponseEntity.ok(updatedLocation);
     }
 
-    @DeleteMapping("delete/{id}")
+    @DeleteMapping("/delete/{id}")
     public ResponseEntity<Void> deleteLocation(@PathVariable Long id) {
         locationService.deleteLocation(id);
         return ResponseEntity.noContent().build();
