@@ -1,9 +1,7 @@
 package com.example.swp391_fall24_taxi_be.entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.util.List;
 
@@ -13,7 +11,6 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -21,6 +18,7 @@ public class User {
 
     private String fullName;
     private String email;
+    private String phoneNumber;
     private String password;
     private String role;
     private String status;
