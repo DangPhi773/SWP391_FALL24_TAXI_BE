@@ -24,6 +24,12 @@ public class ComplaintController {
         return ResponseEntity.ok(complaints);
     }
 
+    @GetMapping("/getAllByStaff")
+    public ResponseEntity<List<ComplaintDTO>> getAllComplaintsByStaff() {
+        List<ComplaintDTO> complaints = complaintService.getAllComplaintsByStaff();
+        return ResponseEntity.ok(complaints);
+    }
+
     @GetMapping("/search/description")
     public ResponseEntity<List<ComplaintDTO>> searchByDescription(@RequestParam String description) {
         List<ComplaintDTO> complaints = complaintService.searchByDescription(description);
