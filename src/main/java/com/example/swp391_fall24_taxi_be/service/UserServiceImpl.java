@@ -209,25 +209,25 @@ public class UserServiceImpl implements UserService {
 
     }
 
-//    @Override
-//    public ResponseEntity<?> forgotPassword(String email) {
-//        try {
-//            if (userRepository.existsByEmail(email) == null)
-//                return ResponseEntity.badRequest().body(new ApiResponse(false, "Email is not exist !!!"));
-//            User user = userRepository.existsByEmail(email);
-//            String randomPassword = RandomStringUtils.randomAlphanumeric(10);
-//            user.setPassword(passwordEncoder.encode(randomPassword));
-//            userRepository.save(user);
-//            EmailDetails emailDetails = new EmailDetails();
-//            emailDetails.setRecipient(email);
-//            emailDetails.setSubject("FORGO_PASSWORD");
-//            String message = " Dear " + user.getProfileEntity().getFirstName() + " " + userEntity.getProfileEntity().getLastName()+ ", \n" + " Your new password is : " + randomPassword;
-//            emailDetails.setMsgBody(message);
-//            String result =  emailService.sendSimpleMail(emailDetails);
-//            return ResponseEntity.ok(new ApiResponse(true,result));
-//        }catch (Exception e){
-//            return ResponseEntity.badRequest().body(new ApiResponse(false, e.getMessage()));
-//        }
-//    }
+    @Override
+    public ResponseEntity<?> forgotPassword(String email) {
+        try {
+            if (userRepository.existsByEmail(email) == null)
+                return ResponseEntity.badRequest().body(new ApiResponse(false, "Email is not exist !!!"));
+            User user = userRepository.existsByEmail(email);
+            String randomPassword = RandomStringUtils.randomAlphanumeric(10);
+            user.setPassword(passwordEncoder.encode(randomPassword));
+            userRepository.save(user);
+            EmailDetails emailDetails = new EmailDetails();
+            emailDetails.setRecipient(email);
+            emailDetails.setSubject("FORGO_PASSWORD");
+            String message = " Dear " + user.getFullName() + ", \n" + " Your new password is : " + randomPassword;
+            emailDetails.setMsgBody(message);
+            String result =  emailService.sendSimpleMail(emailDetails);
+            return ResponseEntity.ok(new ApiResponse(true,result));
+        }catch (Exception e){
+            return ResponseEntity.badRequest().body(new ApiResponse(false, e.getMessage()));
+        }
+    }
 
 }

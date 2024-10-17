@@ -19,7 +19,7 @@ public interface UserService {
 
     ResponseEntity<?> updateUser(Integer userId, UserUpdatePayload userUpdatePayload);
 
-//    ResponseEntity<?> forgotPassword(String email);
+    ResponseEntity<?> forgotPassword(String email);
 
     ResponseEntity<?> deleteUser(int userId);
 

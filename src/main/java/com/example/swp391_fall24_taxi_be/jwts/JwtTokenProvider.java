@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
 
+import java.util.Base64;
 import java.util.Date;
 
 @Component
@@ -20,43 +21,50 @@ public class JwtTokenProvider {
     @Value("${jwtExpirationMs}")
     private int jwtExpirationInMs;
 
+    // Generate token method with Base64 encoding for the secret
     public String generateToken(Authentication authentication) {
         UserPrincipal userPrincipal = (UserPrincipal) authentication.getPrincipal();
 
         Date now = new Date();
         Date expiryDate = new Date(now.getTime() + jwtExpirationInMs);
+
+        // Encode the secret key properly using Base64
+        String encodedSecret = Base64.getEncoder().encodeToString(jwtSecret.getBytes());
+
         return Jwts.builder()
                 .setSubject(Long.toString(userPrincipal.getId()))
-                .setIssuedAt(new Date())
+                .setIssuedAt(now)
                 .setExpiration(expiryDate)
-                .signWith(SignatureAlgorithm.HS512, jwtSecret)
+                .signWith(SignatureAlgorithm.HS512, encodedSecret)  // Sign with encoded secret
                 .compact();
     }
 
+    // Extract user ID from JWT
     public int getUserIdFromJWT(String token) {
         Claims claims = Jwts.parser()
-                .setSigningKey(jwtSecret)
+                .setSigningKey(Base64.getEncoder().encodeToString(jwtSecret.getBytes()))  // Sign with encoded secret
                 .parseClaimsJws(token)
                 .getBody();
         return Integer.parseInt(claims.getSubject());
-
     }
 
+    // Validate the JWT token
     public boolean validateToken(String authToken) {
         try {
-            Jwts.parser().setSigningKey(jwtSecret).parseClaimsJws(authToken);
+            Jwts.parser()
+                    .setSigningKey(Base64.getEncoder().encodeToString(jwtSecret.getBytes()))  // Sign with encoded secret
+                    .parseClaimsJws(authToken);
             return true;
-
         } catch (SignatureException ex) {
             logger.error("Invalid JWT signature");
         } catch (MalformedJwtException ex) {
             logger.error("Invalid JWT token");
         } catch (ExpiredJwtException ex) {
-            logger.error("Expired JWT Token");
+            logger.error("Expired JWT token");
         } catch (UnsupportedJwtException ex) {
             logger.error("Unsupported JWT token");
         } catch (IllegalArgumentException ex) {
-            logger.error("JWT clams String is empty");
+            logger.error("JWT claims string is empty");
         }
         return false;
     }

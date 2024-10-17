@@ -67,10 +67,7 @@ public class AuthController {
             UserPrincipal userPrincipal = (UserPrincipal) authentication.getPrincipal();
             List<String> roles = userPrincipal.getAuthorities().stream()
                     .map(GrantedAuthority::getAuthority).collect(Collectors.toList());
-            return ResponseEntity.ok(new JwtAuthenticationResponse(jwt,
-                    userPrincipal.getId(),
-                    userPrincipal.getUsername()
-                    , roles.get(0)));
+            return ResponseEntity.ok(new JwtAuthenticationResponse(jwt));
         } catch (Exception e) {
             logger.error(LOGIN_ERROR);
             return ResponseEntity.badRequest().body(new ApiResponse(STATUS_FALSE, LOGIN_ERROR));
@@ -81,8 +78,8 @@ public class AuthController {
     public  ResponseEntity<?> registerNewUser(@RequestBody UserRegisterPayload userRegisterPayload) {
         return userService.registerNewUser(userRegisterPayload);
     }
-//    @GetMapping("/forgotPassword/{email}")
-//    public ResponseEntity<?> forgotPassword(@PathVariable("email") String email)  {
-//        return userService.forgotPassword(email);
-//    }
+    @GetMapping("/forgotPassword/{email}")
+    public ResponseEntity<?> forgotPassword(@PathVariable("email") String email)  {
+        return userService.forgotPassword(email);
+    }
 }
