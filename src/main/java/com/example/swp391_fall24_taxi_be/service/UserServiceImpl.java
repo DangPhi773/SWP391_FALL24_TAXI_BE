@@ -220,7 +220,7 @@ public class UserServiceImpl implements UserService {
             userRepository.save(user);
             EmailDetails emailDetails = new EmailDetails();
             emailDetails.setRecipient(email);
-            emailDetails.setSubject("FORGO_PASSWORD");
+            emailDetails.setSubject("FORGOT_PASSWORD");
             String message = " Dear " + user.getFullName() + ", \n" + " Your new password is : " + randomPassword;
             emailDetails.setMsgBody(message);
             String result =  emailService.sendSimpleMail(emailDetails);
