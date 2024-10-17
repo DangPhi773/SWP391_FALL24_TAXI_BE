@@ -9,6 +9,8 @@ public interface ComplaintService {
     //Get All Complaint (Status "Active")
     List<ComplaintDTO> getAllComplaints();
 
+    List<ComplaintDTO> getAllComplaintsByStaff();
+
     //Search display all status
     List<ComplaintDTO> searchByDescription(String description);
 

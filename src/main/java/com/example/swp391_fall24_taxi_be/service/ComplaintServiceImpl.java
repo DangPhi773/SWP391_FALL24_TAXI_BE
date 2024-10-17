@@ -28,6 +28,16 @@ public class ComplaintServiceImpl implements ComplaintService {
                 .collect(Collectors.toList());
     }
 
+    //Get Complaint have Status "PENDING"
+    @Override
+    public List<ComplaintDTO> getAllComplaintsByStaff() {
+        List<Complaint> complaints = complaintRepository.findByStatus("PENDING");
+        return complaints.stream()
+                .map(loc -> new ComplaintDTO(loc.getComplaintId(), loc.getDescription(), loc.getSubmittedDate(), loc.getStatus()))
+                .collect(Collectors.toList());
+    }
+
+    //Search Complaint By Description
     @Override
     public List<ComplaintDTO> searchByDescription(String description) {
         List<Complaint> complaints = complaintRepository.findByDescriptionContaining(description);
@@ -58,7 +68,7 @@ public class ComplaintServiceImpl implements ComplaintService {
         Complaint complaint = new Complaint();
         complaint.setDescription(complaintDTO.getDescription());
         complaint.setSubmittedDate(ZonedDateTime.now(VIETNAM_ZONE).toLocalDateTime());
-        complaint.setStatus("Pending");
+        complaint.setStatus("PENDING");
         complaintRepository.save(complaint);
         return new ComplaintDTO(complaint.getComplaintId(), complaint.getDescription(), complaint.getSubmittedDate(), complaint.getStatus());
     }
@@ -68,7 +78,7 @@ public class ComplaintServiceImpl implements ComplaintService {
         Complaint complaint = complaintRepository.findById(id).orElseThrow(() -> new RuntimeException("Complaint not found"));
         complaint.setDescription(complaintDTO.getDescription());
         complaint.setSubmittedDate(ZonedDateTime.now(VIETNAM_ZONE).toLocalDateTime());
-        complaint.setStatus("Pending");
+        complaint.setStatus("PENDING");
         complaintRepository.save(complaint);
         return new ComplaintDTO(complaint.getComplaintId(), complaint.getDescription(), complaint.getSubmittedDate(), complaint.getStatus());
     }
@@ -89,7 +99,7 @@ public class ComplaintServiceImpl implements ComplaintService {
     public void deleteComplaint(Long id) {
         Complaint complaint = complaintRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Complaint not found"));
-        complaint.setStatus("Declined");
+        complaint.setStatus("DEACTIVATED");
         complaintRepository.save(complaint);
     }
 }
