@@ -2,11 +2,13 @@ package com.example.swp391_fall24_taxi_be.controller;
 
 import com.example.swp391_fall24_taxi_be.dto.request.RidePayload;
 import com.example.swp391_fall24_taxi_be.dto.response.RideResponse;
+import com.example.swp391_fall24_taxi_be.entity.Ride;
 import com.example.swp391_fall24_taxi_be.service.RideService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -38,7 +40,7 @@ public class RideController {
     }
 
     @GetMapping("/getAll")
-    public ResponseEntity<List<RideResponse>> getAllRides() {
+    public ResponseEntity<List<RidePayload>> getAllRides() {
         return ResponseEntity.ok(rideService.getAllRides());
     }
 

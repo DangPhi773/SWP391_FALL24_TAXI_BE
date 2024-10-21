@@ -10,7 +10,7 @@ public interface RideService {
     RideResponse updateRide(Long id, RidePayload ridePayload);
     void deleteRide(Long id);
     RideResponse getRideById(Long id);
-    List<RideResponse> getAllRides();
+    List<RidePayload> getAllRides();
     void joinRide(Long rideId, Long userId);
     void updateRideStatus(Long rideId, String status, Long staffId);
     List<RideResponse> getAllRidesByPendingStatus();

@@ -7,6 +7,7 @@ import java.time.LocalDateTime;
 
 @Data
 public class RidePayload {
+    private Long rideId;
     private String rideCode;
     private Long startLocationId;
     private Long endLocationId;
@@ -18,4 +19,7 @@ public class RidePayload {
     private String status;
     private String paymentMethod;
     private Long userId;
+    private Integer availableSeats;
+    private String startLocationName;
+    private String endLocationName;
 }
