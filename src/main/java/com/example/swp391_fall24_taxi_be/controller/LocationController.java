@@ -1,5 +1,6 @@
 package com.example.swp391_fall24_taxi_be.controller;
 
+import com.example.swp391_fall24_taxi_be.dto.request.LocationPayLoad;
 import com.example.swp391_fall24_taxi_be.dto.response.LocationDTO;
 import com.example.swp391_fall24_taxi_be.service.LocationService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,14 +26,14 @@ public class LocationController {
     }
 
     @PostMapping("/add")
-    public ResponseEntity<LocationDTO> addLocation(@RequestBody LocationDTO locationDTO) {
-        LocationDTO createdLocation = locationService.addLocation(locationDTO);
+    public ResponseEntity<LocationDTO> addLocation(@RequestBody LocationPayLoad locationPayLoad) {
+        LocationDTO createdLocation = locationService.addLocation(locationPayLoad);
         return ResponseEntity.ok(createdLocation);
     }
 
     @PutMapping("/update/{id}")
-    public ResponseEntity<LocationDTO> updateLocation(@PathVariable Long id, @RequestBody LocationDTO locationDTO) {
-        LocationDTO updatedLocation = locationService.updateLocation(id, locationDTO);
+    public ResponseEntity<LocationDTO> updateLocation(@PathVariable Long id, @RequestBody LocationPayLoad locationPayLoad) {
+        LocationDTO updatedLocation = locationService.updateLocation(id, locationPayLoad);
         return ResponseEntity.ok(updatedLocation);
     }
 

@@ -29,6 +29,5 @@ public class Complaint {
     @JoinColumn(name = "rideId")
     private Ride ride;
 
-    // Getters and Setters
 }
 

@@ -1,10 +1,12 @@
 package com.example.swp391_fall24_taxi_be.service;
 
+import com.example.swp391_fall24_taxi_be.dto.request.LocationPayLoad;
 import com.example.swp391_fall24_taxi_be.dto.response.LocationDTO;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
+import com.example.swp391_fall24_taxi_be.entity.Complaint;
 import com.example.swp391_fall24_taxi_be.repository.LocationRepository;
 import com.example.swp391_fall24_taxi_be.entity.Location;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,25 +34,33 @@ public class LocationServicelmpl implements LocationService {
     }
 
     @Override
-    public LocationDTO addLocation(LocationDTO locationDTO) {
+    public LocationDTO addLocation(LocationPayLoad locationPayLoad) {
         Location location = new Location();
-        location.setLocationName(locationDTO.getLocationName());
-        location.setDescription(locationDTO.getDescription());
+        location.setLocationName(locationPayLoad.getLocationName());
+        location.setDescription(locationPayLoad.getDescription());
         location = locationRepository.save(location);
         return new LocationDTO(location.getLocationId(), location.getLocationName(), location.getDescription());
     }
 
     @Override
-    public LocationDTO updateLocation(Long id, LocationDTO locationDTO) {
+    public LocationDTO updateLocation(Long id, LocationPayLoad locationPayLoad) {
         Location location = locationRepository.findById(id).orElseThrow(() -> new RuntimeException("Location not found"));
-        location.setLocationName(locationDTO.getLocationName());
-        location.setDescription(locationDTO.getDescription());
+        location.setLocationName(locationPayLoad.getLocationName());
+        location.setDescription(locationPayLoad.getDescription());
         location = locationRepository.save(location);
         return new LocationDTO(location.getLocationId(), location.getLocationName(), location.getDescription());
     }
 
     @Override
     public void deleteLocation(Long id) {
-        locationRepository.deleteById(id);
+        Location location = locationRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Location not found"));
+
+        // Nếu cần kiểm tra các liên kết trước khi xóa (ví dụ: rideLocations)
+        if (location.getRideLocations() != null && !location.getRideLocations().isEmpty()) {
+            throw new RuntimeException("Cannot delete location as it has associated RideLocations.");
+        }
+
+        locationRepository.delete(location);
     }
 }

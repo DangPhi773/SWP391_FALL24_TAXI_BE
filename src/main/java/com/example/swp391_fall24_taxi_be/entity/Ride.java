@@ -26,6 +26,7 @@ public class Ride {
     private LocalDate rideDate;
     private Integer capacity;
     private Double price;
+    private String paymentMethod;
     private String status;
 
     @OneToMany(mappedBy = "ride", cascade = CascadeType.ALL)
