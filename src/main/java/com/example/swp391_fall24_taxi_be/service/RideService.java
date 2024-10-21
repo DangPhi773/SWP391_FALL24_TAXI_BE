@@ -13,4 +13,5 @@ public interface RideService {
     List<RideResponse> getAllRides();
     void joinRide(Long rideId, Long userId);
     void updateRideStatus(Long rideId, String status, Long staffId);
+    List<RideResponse> getAllRidesByPendingStatus();
 }

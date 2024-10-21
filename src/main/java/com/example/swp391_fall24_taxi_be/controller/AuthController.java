@@ -10,7 +10,6 @@ import com.example.swp391_fall24_taxi_be.repository.UserRepository;
 import com.example.swp391_fall24_taxi_be.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -59,10 +58,8 @@ public class AuthController {
                             loginRequest.getPassword()
                     )
             );
-            //set authentication to security context
             SecurityContextHolder.getContext().setAuthentication(authentication);
 
-            // generate token
             String jwt = tokenProvider.generateToken(authentication);
             UserPrincipal userPrincipal = (UserPrincipal) authentication.getPrincipal();
             List<String> roles = userPrincipal.getAuthorities().stream()

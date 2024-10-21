@@ -17,4 +17,5 @@ public class RideResponse {
     private Integer capacity;
     private Double price;
     private String status;
+    private String paymentMethod;
 }

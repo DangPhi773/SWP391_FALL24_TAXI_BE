@@ -33,6 +33,5 @@ public class Transaction {
     @JoinColumn(name = "rideId")
     private Ride ride;
 
-    // Getters and Setters
 }
 

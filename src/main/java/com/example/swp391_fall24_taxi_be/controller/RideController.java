@@ -42,6 +42,11 @@ public class RideController {
         return ResponseEntity.ok(rideService.getAllRides());
     }
 
+    @GetMapping("/getAllRidePendingStatus")
+    public ResponseEntity<List<RideResponse>> getAllRidesByPendingStatus() {
+        return ResponseEntity.ok(rideService.getAllRidesByPendingStatus());
+    }
+
     @PostMapping("/{rideId}/join")
     public ResponseEntity<String> joinRide(
             @PathVariable Long rideId,

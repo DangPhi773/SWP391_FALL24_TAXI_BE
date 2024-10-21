@@ -33,6 +33,10 @@ public class RideServiceImpl implements RideService {
 
     @Override
     public RideResponse createRide(RidePayload ridePayload) {
+        if (!"CASH".equals(ridePayload.getPaymentMethod()) && !"ONLINE".equals(ridePayload.getPaymentMethod())) {
+            throw new IllegalArgumentException("Invalid payment method. It must be either 'CASH' or 'ONLINE'.");
+        }
+
         Ride ride = new Ride();
         ride.setRideCode(ridePayload.getRideCode());
         ride.setStartTime(ridePayload.getStartTime());
@@ -41,6 +45,8 @@ public class RideServiceImpl implements RideService {
         ride.setCapacity(ridePayload.getCapacity());
         ride.setPrice(ridePayload.getPrice());
         ride.setStatus("PENDING");
+
+        ride.setPaymentMethod(ridePayload.getPaymentMethod());
 
         ride = rideRepository.save(ride);
 
@@ -71,6 +77,7 @@ public class RideServiceImpl implements RideService {
 
         return mapToRideResponse(ride);
     }
+
 
     @Override
     public void joinRide(Long rideId, Long userId) {
@@ -132,6 +139,7 @@ public class RideServiceImpl implements RideService {
         ride.setCapacity(ridePayload.getCapacity());
         ride.setPrice(ridePayload.getPrice());
         ride.setStatus(ridePayload.getStatus());
+        ride.setPaymentMethod(ridePayload.getPaymentMethod());
         ride = rideRepository.save(ride);
         return mapToRideResponse(ride);
     }
@@ -153,6 +161,13 @@ public class RideServiceImpl implements RideService {
         return rides.stream().map(this::mapToRideResponse).collect(Collectors.toList());
     }
 
+    @Override
+    public List<RideResponse> getAllRidesByPendingStatus() {
+        List<Ride> pendingRides = rideRepository.findByStatus("PENDING");
+        return pendingRides.stream().map(this::mapToRideResponse).collect(Collectors.toList());
+    }
+
+
     private RideResponse mapToRideResponse(Ride ride) {
         return new RideResponse(
                 ride.getRideId(),
@@ -162,7 +177,8 @@ public class RideServiceImpl implements RideService {
                 ride.getRideDate(),
                 ride.getCapacity(),
                 ride.getPrice(),
-                ride.getStatus()
+                ride.getStatus(),
+                ride.getPaymentMethod()
         );
     }
 }
