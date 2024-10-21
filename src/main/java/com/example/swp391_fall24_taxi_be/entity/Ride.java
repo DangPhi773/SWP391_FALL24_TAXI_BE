@@ -21,8 +21,6 @@ public class Ride {
     private Long rideId;
 
     private String rideCode;
-    private String startLocation;
-    private String endLocation;
     private LocalDateTime startTime;
     private LocalDateTime endTime;
     private LocalDate rideDate;
@@ -30,16 +28,16 @@ public class Ride {
     private Double price;
     private String status;
 
-    @OneToMany(mappedBy = "ride")
-    private List<UserRide> userRides;
+    @OneToMany(mappedBy = "ride", cascade = CascadeType.ALL)
+    private List<RideLocation> rideLocations;
 
     @OneToMany(mappedBy = "ride")
-    private List<RideLocation> rideLocations;
+    private List<UserRide> userRides;
 
     @OneToMany(mappedBy = "ride")
     private List<Transaction> transactions;
 
     @OneToMany(mappedBy = "ride")
     private List<Complaint> complaints;
-
 }
+

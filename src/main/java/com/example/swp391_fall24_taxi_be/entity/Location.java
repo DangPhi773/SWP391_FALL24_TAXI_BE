@@ -22,8 +22,5 @@ public class Location {
     @OneToMany(mappedBy = "location")
     private List<RideLocation> rideLocations;
 
-
-
-    // Getters and Setters
 }
 

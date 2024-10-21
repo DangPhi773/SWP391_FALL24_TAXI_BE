@@ -2,12 +2,8 @@ package com.example.swp391_fall24_taxi_be.service;
 
 import com.example.swp391_fall24_taxi_be.dto.request.RidePayload;
 import com.example.swp391_fall24_taxi_be.dto.response.RideResponse;
-import com.example.swp391_fall24_taxi_be.entity.Ride;
-import com.example.swp391_fall24_taxi_be.entity.User;
-import com.example.swp391_fall24_taxi_be.entity.UserRide;
-import com.example.swp391_fall24_taxi_be.repository.RideRepository;
-import com.example.swp391_fall24_taxi_be.repository.UserRepository;
-import com.example.swp391_fall24_taxi_be.repository.UserRideRepository;
+import com.example.swp391_fall24_taxi_be.entity.*;
+import com.example.swp391_fall24_taxi_be.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -29,12 +25,16 @@ public class RideServiceImpl implements RideService {
     @Autowired
     private UserRepository userRepository;
 
+    @Autowired
+    private LocationRepository locationRepository;
+
+    @Autowired
+    private RideLocationRepository rideLocationRepository;
+
     @Override
     public RideResponse createRide(RidePayload ridePayload) {
         Ride ride = new Ride();
         ride.setRideCode(ridePayload.getRideCode());
-        ride.setStartLocation(ridePayload.getStartLocation());
-        ride.setEndLocation(ridePayload.getEndLocation());
         ride.setStartTime(ridePayload.getStartTime());
         ride.setEndTime(ridePayload.getEndTime());
         ride.setRideDate(ridePayload.getRideDate());
@@ -44,6 +44,21 @@ public class RideServiceImpl implements RideService {
 
         ride = rideRepository.save(ride);
 
+        Location startLocation = locationRepository.findById(ridePayload.getStartLocationId())
+                .orElseThrow(() -> new RuntimeException("Start location not found"));
+        Location endLocation = locationRepository.findById(ridePayload.getEndLocationId())
+                .orElseThrow(() -> new RuntimeException("End location not found"));
+
+        RideLocation startRideLocation = new RideLocation();
+        startRideLocation.setRide(ride);
+        startRideLocation.setLocation(startLocation);
+        rideLocationRepository.save(startRideLocation);
+
+        RideLocation endRideLocation = new RideLocation();
+        endRideLocation.setRide(ride);
+        endRideLocation.setLocation(endLocation);
+        rideLocationRepository.save(endRideLocation);
+
         User user = userRepository.findById(ridePayload.getUserId().intValue())
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
@@ -52,7 +67,6 @@ public class RideServiceImpl implements RideService {
         userRide.setRoleInRide("ORGANIZER");
         userRide.setUser(user);
         userRide.setRide(ride);
-
         userRideRepository.save(userRide);
 
         return mapToRideResponse(ride);
@@ -112,8 +126,6 @@ public class RideServiceImpl implements RideService {
     public RideResponse updateRide(Long id, RidePayload ridePayload) {
         Ride ride = rideRepository.findById(id).orElseThrow(() -> new RuntimeException("Ride not found"));
         ride.setRideCode(ridePayload.getRideCode());
-        ride.setStartLocation(ridePayload.getStartLocation());
-        ride.setEndLocation(ridePayload.getEndLocation());
         ride.setStartTime(ridePayload.getStartTime());
         ride.setEndTime(ridePayload.getEndTime());
         ride.setRideDate(ridePayload.getRideDate());
@@ -145,8 +157,6 @@ public class RideServiceImpl implements RideService {
         return new RideResponse(
                 ride.getRideId(),
                 ride.getRideCode(),
-                ride.getStartLocation(),
-                ride.getEndLocation(),
                 ride.getStartTime(),
                 ride.getEndTime(),
                 ride.getRideDate(),

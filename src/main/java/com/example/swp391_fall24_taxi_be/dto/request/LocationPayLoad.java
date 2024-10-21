@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class LocationPageLoad {
+public class LocationPayLoad {
     private String locationName;
     private String description;
 }

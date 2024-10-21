@@ -8,8 +8,8 @@ import java.time.LocalDateTime;
 @Data
 public class RidePayload {
     private String rideCode;
-    private String startLocation;
-    private String endLocation;
+    private Long startLocationId;
+    private Long endLocationId;
     private LocalDateTime startTime;
     private LocalDateTime endTime;
     private LocalDate rideDate;

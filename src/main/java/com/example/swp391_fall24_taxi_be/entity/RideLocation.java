@@ -25,5 +25,4 @@ public class RideLocation {
     @JoinColumn(name = "locationId")
     private Location location;
 
-    // Getters and Setters
 }

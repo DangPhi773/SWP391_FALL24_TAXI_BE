@@ -23,5 +23,7 @@ public interface UserService {
 
     ResponseEntity<?> deleteUser(int userId);
 
+    ResponseEntity<?> registerNewAdmin(UserRegisterPayload userRegisterPayload);
 
+    ResponseEntity<?> registerNewStaff(UserRegisterPayload userRegisterPayload);
 }

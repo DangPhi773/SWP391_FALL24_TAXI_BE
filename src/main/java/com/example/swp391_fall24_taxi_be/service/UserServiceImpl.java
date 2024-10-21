@@ -17,8 +17,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 
-import java.nio.charset.StandardCharsets;
-import java.util.Base64;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -129,12 +127,10 @@ public class UserServiceImpl implements UserService {
     @Override
     public ResponseEntity<?> updateUser(Integer userId, UserUpdatePayload userUpdatePayload) {
         try {
-            // Check if the user exists
             if (userRepository.findById(userId).isEmpty()) {
                 return ResponseEntity.badRequest().body(new ApiResponse(false, "User not found"));
             }
 
-            // Fetch and update the user entity
             User user = userRepository.getOne(userId);
             user.setFullName(userUpdatePayload.getUserDTO().getFullName());
             user.setEmail(userUpdatePayload.getUserDTO().getEmail());
@@ -142,7 +138,6 @@ public class UserServiceImpl implements UserService {
             user.setRole(userUpdatePayload.getUserDTO().getRole());
             user.setStatus(userUpdatePayload.getUserDTO().getStatus());
 
-            // Save the updated user entity
             userRepository.save(user);
 
             return ResponseEntity.ok(new ApiResponse(true, "User updated successfully", userUpdatePayload));
@@ -155,39 +150,93 @@ public class UserServiceImpl implements UserService {
     @Override
     public ResponseEntity<?> registerNewUser(UserRegisterPayload userRegisterPayload) {
         try {
-            // Validate the registration payload
             String errorMessage = validateUserCreatePayload(userRegisterPayload.getEmail(), userRegisterPayload.getPassword());
             if (errorMessage != null) {
                 return ResponseEntity.badRequest().body(new ApiResponse(false, errorMessage));
             }
 
-            // Create a new User entity
             User userEntity = new User();
             userEntity.setEmail(userRegisterPayload.getEmail());
             userEntity.setFullName(userRegisterPayload.getFullName());
             String encodedPassword = passwordEncoder.encode(userRegisterPayload.getPassword());
             userEntity.setPassword(encodedPassword);
 
-            // Set user role and status
-            userEntity.setRole("STUDENT");  // Assuming role is a String like "ROLE_CUSTOMER"
-            userEntity.setStatus("ACTIVE"); // Set status as ACTIVE by default
+            userEntity.setRole("STUDENT");
+            userEntity.setStatus("ACTIVE");
 
-            // Create a new Wallet entity and associate with the user (if needed)
             Wallet wallet = new Wallet();
-            wallet.setBalance(0.0);  // Initialize wallet with zero balance
+            wallet.setBalance(0.0);
             wallet.setUser(userEntity);
             userEntity.setWallet(wallet);
 
-            // Save the user entity with the wallet
             userRepository.save(userEntity);
 
-            // Return success response
             return ResponseEntity.ok().body(new ApiResponse(true, "User registered successfully", userRegisterPayload));
         } catch (Exception e) {
-            // Handle any exceptions and return error response
             return ResponseEntity.badRequest().body(new ApiResponse(false, e.getMessage()));
         }
     }
+
+    @Override
+    public ResponseEntity<?> registerNewAdmin(UserRegisterPayload userRegisterPayload) {
+        try {
+            String errorMessage = validateUserCreatePayload(userRegisterPayload.getEmail(), userRegisterPayload.getPassword());
+            if (errorMessage != null) {
+                return ResponseEntity.badRequest().body(new ApiResponse(false, errorMessage));
+            }
+
+            User userEntity = new User();
+            userEntity.setEmail(userRegisterPayload.getEmail());
+            userEntity.setFullName(userRegisterPayload.getFullName());
+            String encodedPassword = passwordEncoder.encode(userRegisterPayload.getPassword());
+            userEntity.setPassword(encodedPassword);
+
+            userEntity.setRole("ADMIN");
+            userEntity.setStatus("ACTIVE");
+
+            Wallet wallet = new Wallet();
+            wallet.setBalance(0.0);
+            wallet.setUser(userEntity);
+            userEntity.setWallet(wallet);
+
+            userRepository.save(userEntity);
+
+            return ResponseEntity.ok().body(new ApiResponse(true, "Admin registered successfully", userRegisterPayload));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(new ApiResponse(false, e.getMessage()));
+        }
+    }
+
+    @Override
+    public ResponseEntity<?> registerNewStaff(UserRegisterPayload userRegisterPayload) {
+        try {
+            String errorMessage = validateUserCreatePayload(userRegisterPayload.getEmail(), userRegisterPayload.getPassword());
+            if (errorMessage != null) {
+                return ResponseEntity.badRequest().body(new ApiResponse(false, errorMessage));
+            }
+
+            User userEntity = new User();
+            userEntity.setEmail(userRegisterPayload.getEmail());
+            userEntity.setFullName(userRegisterPayload.getFullName());
+            String encodedPassword = passwordEncoder.encode(userRegisterPayload.getPassword());
+            userEntity.setPassword(encodedPassword);
+
+            userEntity.setRole("STAFF");
+            userEntity.setStatus("ACTIVE");
+
+            Wallet wallet = new Wallet();
+            wallet.setBalance(0.0);
+            wallet.setUser(userEntity);
+            userEntity.setWallet(wallet);
+
+            userRepository.save(userEntity);
+
+            return ResponseEntity.ok().body(new ApiResponse(true, "Staff registered successfully", userRegisterPayload));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(new ApiResponse(false, e.getMessage()));
+        }
+    }
+
     @Override
     public ResponseEntity<?> changePassword(int userId, ChangePasswordPayload changePasswordPayload) {
         try {

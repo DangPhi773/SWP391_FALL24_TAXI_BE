@@ -11,8 +11,6 @@ import java.time.LocalDateTime;
 public class RideResponse {
     private Long rideId;
     private String rideCode;
-    private String startLocation;
-    private String endLocation;
     private LocalDateTime startTime;
     private LocalDateTime endTime;
     private LocalDate rideDate;

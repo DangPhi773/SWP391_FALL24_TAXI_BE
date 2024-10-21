@@ -28,6 +28,16 @@ public class UserController {
         return userService.registerNewUser(userRegisterPayload);
     }
 
+    @PostMapping("/registerNewStaff")
+    public  ResponseEntity<?> registerNewStaff(@RequestBody UserRegisterPayload userRegisterPayload) {
+        return userService.registerNewStaff(userRegisterPayload);
+    }
+
+    @PostMapping("/registerNewAdmin")
+    public  ResponseEntity<?> registerNewAdmin(@RequestBody UserRegisterPayload userRegisterPayload) {
+        return userService.registerNewAdmin(userRegisterPayload);
+    }
+
     @PutMapping("/changePassword/{id}")
     public ResponseEntity<?> changePassword(@PathVariable("id") int userId, @RequestBody ChangePasswordPayload changePasswordPayload) {
         return userService.changePassword(userId, changePasswordPayload);
