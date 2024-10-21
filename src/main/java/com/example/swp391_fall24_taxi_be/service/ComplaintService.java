@@ -1,5 +1,6 @@
 package com.example.swp391_fall24_taxi_be.service;
 
+import com.example.swp391_fall24_taxi_be.dto.request.ComplaintPayLoad;
 import com.example.swp391_fall24_taxi_be.dto.response.ComplaintDTO;
 
 import java.time.LocalDateTime;
@@ -11,22 +12,23 @@ public interface ComplaintService {
 
     List<ComplaintDTO> getAllComplaintsByStaff();
 
-    //Search display all status
+    // Search display all status
     List<ComplaintDTO> searchByDescription(String description);
-
-    List<ComplaintDTO> searchBySubmittedDate(LocalDateTime startDate, LocalDateTime endDate);
 
     List<ComplaintDTO> searchByStatus(String status);
 
-    //Create New Complaint By User (status: "pending")
-    ComplaintDTO addComplaint(ComplaintDTO complaintDTO);
+    List<ComplaintDTO> searchBySubmittedDate(LocalDateTime startDate, LocalDateTime endDate);
 
-    //Update Complaint By User (status: "pending")
-    ComplaintDTO updateComplaintByUser(Long id, ComplaintDTO complaintDTO);
+    // Create New Complaint
+    ComplaintDTO addComplaint(ComplaintPayLoad complaintPayLoad);
 
-    //Update Complaint By Staff (status: depends on the Staff)
-    ComplaintDTO updateComplaintByStaff(Long id, ComplaintDTO complaintDTO);
+    // Update Complaint By User
+    ComplaintDTO updateComplaintByUser(Long id, ComplaintPayLoad complaintPayLoad);
 
-    //Delete Such As Update Status To "Declined"
+    // Update Complaint By Staff
+    ComplaintDTO updateComplaintByStaff(Long userId, Long complaintId, String status);
+
+    // Delete Complaint (Update Status to "Deactivated")
     void deleteComplaint(Long id);
+
 }

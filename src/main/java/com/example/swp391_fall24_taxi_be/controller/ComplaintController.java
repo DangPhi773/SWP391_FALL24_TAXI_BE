@@ -1,5 +1,6 @@
 package com.example.swp391_fall24_taxi_be.controller;
 
+import com.example.swp391_fall24_taxi_be.dto.request.ComplaintPayLoad;
 import com.example.swp391_fall24_taxi_be.dto.response.ComplaintDTO;
 import com.example.swp391_fall24_taxi_be.service.ComplaintService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,36 +37,33 @@ public class ComplaintController {
         return ResponseEntity.ok(complaints);
     }
 
-    @GetMapping("/searchBySubmittedDate")
-    public ResponseEntity<List<ComplaintDTO>> searchBySubmittedDate(
-            @RequestParam("startDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime startDate,
-            @RequestParam("endDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime endDate) {
-
-        List<ComplaintDTO> complaints = complaintService.searchBySubmittedDate(startDate, endDate);
-        return ResponseEntity.ok(complaints);
-    }
-
-    @GetMapping("/search/status")
+    @GetMapping("/searchByStatus")
     public ResponseEntity<List<ComplaintDTO>> searchByStatus(@RequestParam String status) {
         List<ComplaintDTO> complaints = complaintService.searchByStatus(status);
         return ResponseEntity.ok(complaints);
     }
 
     @PostMapping("/add")
-    public ResponseEntity<ComplaintDTO> addComplaint(@RequestBody ComplaintDTO complaintDTO) {
-        ComplaintDTO newComplaint = complaintService.addComplaint(complaintDTO);
+    public ResponseEntity<ComplaintDTO> addComplaint(@RequestBody ComplaintPayLoad complaintPayLoad) {
+        ComplaintDTO newComplaint = complaintService.addComplaint(complaintPayLoad);
         return ResponseEntity.ok(newComplaint);
     }
 
     @PutMapping("/updateByUser/{id}")
-    public ResponseEntity<ComplaintDTO> updateComplaintByUser(@PathVariable Long id, @RequestBody ComplaintDTO complaintDTO) {
-        ComplaintDTO updatedComplaint = complaintService.updateComplaintByUser(id, complaintDTO);
+    public ResponseEntity<ComplaintDTO> updateComplaintByUser(@PathVariable Long id, @RequestBody ComplaintPayLoad complaintPayLoad) {
+        ComplaintDTO updatedComplaint = complaintService.updateComplaintByUser(id, complaintPayLoad);
         return ResponseEntity.ok(updatedComplaint);
     }
 
     @PutMapping("/updateByStaff/{id}")
-    public ResponseEntity<ComplaintDTO> updateComplaintByStaff(@PathVariable Long id, @RequestBody ComplaintDTO complaintDTO) {
-        ComplaintDTO updatedComplaint = complaintService.updateComplaintByStaff(id, complaintDTO);
+    public ResponseEntity<ComplaintDTO> updateComplaintByStaff(
+            @RequestParam Long userId,
+            @RequestParam Long complaintId,
+            @RequestParam String status) {
+
+        // Gọi service để thực hiện cập nhật
+        ComplaintDTO updatedComplaint = complaintService.updateComplaintByStaff(userId, complaintId, status);
+
         return ResponseEntity.ok(updatedComplaint);
     }
 

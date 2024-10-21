@@ -10,7 +10,10 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ComplaintPayLoad {
+    private Long complaintId;
     private String description;
     private LocalDateTime submittedDate;
     private String status;
+    private Long userId;
+    private Long rideId;
 }

@@ -15,4 +15,5 @@ public class ComplaintDTO {
     private String description;
     private LocalDateTime submittedDate;
     private String status;
+
 }

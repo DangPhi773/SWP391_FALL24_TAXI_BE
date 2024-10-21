@@ -107,7 +107,8 @@ public class RideServiceImpl implements RideService {
         userRideRepository.save(userRide);
     }
 
-    private final List<String> VALID_STATUSES = Arrays.asList("ACTIVE", "INACTIVE", "RIDING", "COMPLETED", "PROBLEM");
+    private final List<String> VALID_STATUSES =
+            Arrays.asList("ACTIVE", "INACTIVE", "RIDING", "COMPLETED", "PROBLEM");
 
     @Override
     public void updateRideStatus(Long rideId, String status, Long staffId) {
