@@ -7,9 +7,12 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
-
+import org.springframework.security.core.GrantedAuthority;
 import java.util.Base64;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Component
 public class JwtTokenProvider {
@@ -21,17 +24,20 @@ public class JwtTokenProvider {
     @Value("${jwtExpirationMs}")
     private int jwtExpirationInMs;
 
-    // Generate token method with Base64 encoding for the secret
     public String generateToken(Authentication authentication) {
         UserPrincipal userPrincipal = (UserPrincipal) authentication.getPrincipal();
-
+        
+        String role = userPrincipal.getAuthorities().stream()
+                .map(GrantedAuthority::getAuthority)
+                .findFirst()
+                .orElse(null);
         Date now = new Date();
         Date expiryDate = new Date(now.getTime() + jwtExpirationInMs);
 
-        // Encode the secret key properly using Base64
         String encodedSecret = Base64.getEncoder().encodeToString(jwtSecret.getBytes());
 
         return Jwts.builder()
+                .claim("role", role)
                 .setSubject(Long.toString(userPrincipal.getId()))
                 .setIssuedAt(now)
                 .setExpiration(expiryDate)
@@ -39,7 +45,6 @@ public class JwtTokenProvider {
                 .compact();
     }
 
-    // Extract user ID from JWT
     public int getUserIdFromJWT(String token) {
         Claims claims = Jwts.parser()
                 .setSigningKey(Base64.getEncoder().encodeToString(jwtSecret.getBytes()))  // Sign with encoded secret
@@ -48,7 +53,6 @@ public class JwtTokenProvider {
         return Integer.parseInt(claims.getSubject());
     }
 
-    // Validate the JWT token
     public boolean validateToken(String authToken) {
         try {
             Jwts.parser()
