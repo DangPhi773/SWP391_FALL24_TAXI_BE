@@ -14,6 +14,7 @@ public class ComplaintDTO {
     private Long complaintId;
     private String description;
     private LocalDateTime submittedDate;
+    private Integer rating;
     private String status;
 
 }

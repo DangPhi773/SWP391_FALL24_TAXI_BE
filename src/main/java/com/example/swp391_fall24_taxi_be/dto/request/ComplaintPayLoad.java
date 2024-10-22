@@ -13,6 +13,7 @@ public class ComplaintPayLoad {
     private Long complaintId;
     private String description;
     private LocalDateTime submittedDate;
+    private Integer rating;
     private String status;
     private Long userId;
     private Long rideId;

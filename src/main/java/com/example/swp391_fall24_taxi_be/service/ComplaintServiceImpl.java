@@ -40,6 +40,7 @@ public class ComplaintServiceImpl implements ComplaintService {
                         complaint.getComplaintId(),
                         complaint.getDescription(),
                         complaint.getSubmittedDate(),
+                        complaint.getRating(),
                         complaint.getStatus()))
                 .collect(Collectors.toList());
     }
@@ -52,6 +53,7 @@ public class ComplaintServiceImpl implements ComplaintService {
                         complaint.getComplaintId(),
                         complaint.getDescription(),
                         complaint.getSubmittedDate(),
+                        complaint.getRating(),
                         complaint.getStatus()))
                 .collect(Collectors.toList());
     }
@@ -64,18 +66,20 @@ public class ComplaintServiceImpl implements ComplaintService {
                         complaint.getComplaintId(),
                         complaint.getDescription(),
                         complaint.getSubmittedDate(),
+                        complaint.getRating(),
                         complaint.getStatus()))
                 .collect(Collectors.toList());
     }
 
     @Override
     public List<ComplaintDTO> searchByStatus(String status) {
-        List<Complaint> complaints = complaintRepository.findByStatusContaining(status);
+        List<Complaint> complaints = complaintRepository.findByStatus(status);
         return complaints.stream()
                 .map(complaint -> new ComplaintDTO(
                         complaint.getComplaintId(),
                         complaint.getDescription(),
                         complaint.getSubmittedDate(),
+                        complaint.getRating(),
                         complaint.getStatus()))
                 .collect(Collectors.toList());
     }
@@ -88,16 +92,22 @@ public class ComplaintServiceImpl implements ComplaintService {
                         complaint.getComplaintId(),
                         complaint.getDescription(),
                         complaint.getSubmittedDate(),
+                        complaint.getRating(),
                         complaint.getStatus()))
                 .collect(Collectors.toList());
     }
 
     @Override
     public ComplaintDTO addComplaint(ComplaintPayLoad complaintPayLoad) {
+        // Kiểm tra giá trị của rating (chỉ cho phép từ 1 đến 5)
+        if (complaintPayLoad.getRating() < 1 || complaintPayLoad.getRating() > 5) {
+            throw new RuntimeException("Invalid rating. Rating must be between 1 and 5.");
+        }
         Complaint complaint = new Complaint();
         complaint.setDescription(complaintPayLoad.getDescription());
         complaint.setSubmittedDate(ZonedDateTime.now(VIETNAM_ZONE).toLocalDateTime());
         complaint.setStatus("PENDING");
+        complaint.setRating(complaintPayLoad.getRating()); // Set rating
 
         // Lấy User từ userId và gán vào complaint
         User user = userRepository.findById(complaintPayLoad.getUserId().intValue())
@@ -114,29 +124,36 @@ public class ComplaintServiceImpl implements ComplaintService {
                 complaint.getComplaintId(),
                 complaint.getDescription(),
                 complaint.getSubmittedDate(),
+                complaint.getRating(),
                 complaint.getStatus());
     }
 
 
     @Override
     public ComplaintDTO updateComplaintByUser(Long id, ComplaintPayLoad complaintPayLoad) {
-        Complaint complaint = complaintRepository.findById(id).orElseThrow(()
-                -> new RuntimeException("Complaint not found"));
+        Complaint complaint = complaintRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Complaint not found"));
 
         complaint.setDescription(complaintPayLoad.getDescription());
         complaint.setSubmittedDate(ZonedDateTime.now(VIETNAM_ZONE).toLocalDateTime());
         complaint.setStatus("PENDING");
 
-        // Lấy Ride từ rideId và gán vào complaint (nếu có thay đổi)
+        if (complaintPayLoad.getRating() < 1 || complaintPayLoad.getRating() > 5) {
+            throw new RuntimeException("Invalid rating. Rating must be between 1 and 5.");
+        }
+        complaint.setRating(complaintPayLoad.getRating());
+
         Ride ride = rideRepository.findById(complaintPayLoad.getRideId())
                 .orElseThrow(() -> new RuntimeException("Ride not found"));
         complaint.setRide(ride);
 
         complaintRepository.save(complaint);
+
         return new ComplaintDTO(
                 complaint.getComplaintId(),
                 complaint.getDescription(),
                 complaint.getSubmittedDate(),
+                complaint.getRating(),
                 complaint.getStatus());
     }
 
@@ -176,6 +193,7 @@ public class ComplaintServiceImpl implements ComplaintService {
                 complaint.getComplaintId(),
                 complaint.getDescription(),  // Giữ nguyên mô tả cũ
                 complaint.getSubmittedDate(),
+                complaint.getRating(),
                 complaint.getStatus()
         );
     }
