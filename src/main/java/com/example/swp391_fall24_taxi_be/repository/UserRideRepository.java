@@ -8,4 +8,5 @@ import java.util.List;
 
 public interface UserRideRepository extends JpaRepository<UserRide, Long> {
     List<UserRide> findByRide(Ride ride);
+    UserRide findByRideAndRoleInRide(Ride ride, String roleInRide);
 }

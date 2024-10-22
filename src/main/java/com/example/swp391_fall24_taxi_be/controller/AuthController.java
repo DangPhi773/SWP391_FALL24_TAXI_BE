@@ -62,9 +62,11 @@ public class AuthController {
 
             String jwt = tokenProvider.generateToken(authentication);
             UserPrincipal userPrincipal = (UserPrincipal) authentication.getPrincipal();
-            List<String> roles = userPrincipal.getAuthorities().stream()
-                    .map(GrantedAuthority::getAuthority).collect(Collectors.toList());
-            return ResponseEntity.ok(new JwtAuthenticationResponse(jwt));
+            String role = userPrincipal.getAuthorities().stream()
+                    .map(GrantedAuthority::getAuthority)
+                    .findFirst()  // Get the first (and only) role
+                    .orElse(null); // Handle case where no role is found
+            return ResponseEntity.ok(new JwtAuthenticationResponse(jwt, role, userPrincipal.getUsername()));
         } catch (Exception e) {
             logger.error(LOGIN_ERROR);
             return ResponseEntity.badRequest().body(new ApiResponse(STATUS_FALSE, LOGIN_ERROR));

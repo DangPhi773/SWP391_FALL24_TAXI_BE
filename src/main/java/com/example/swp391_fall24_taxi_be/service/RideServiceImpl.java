@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -157,10 +158,57 @@ public class RideServiceImpl implements RideService {
     }
 
     @Override
-    public List<RideResponse> getAllRides() {
+    public List<RidePayload> getAllRides() {
         List<Ride> rides = rideRepository.findAll();
-        return rides.stream().map(this::mapToRideResponse).collect(Collectors.toList());
+        List<RidePayload> ridePayloads = new ArrayList<>();
+
+        for (Ride ride : rides) {
+            int currentParticipants = userRideRepository.findByRide(ride).size();
+            int availableSeats = ride.getCapacity() - currentParticipants;
+
+            RidePayload payload = new RidePayload();
+            payload.setRideId(ride.getRideId()); // Assuming this is a Long
+            payload.setRideCode(String.valueOf(ride.getRideCode())); // Convert Long to String
+            payload.setStartTime(ride.getStartTime());
+            payload.setEndTime(ride.getEndTime());
+            payload.setRideDate(ride.getRideDate());
+            payload.setCapacity(ride.getCapacity());
+            payload.setPrice(ride.getPrice());
+            payload.setStatus(ride.getStatus());
+            payload.setPaymentMethod(ride.getPaymentMethod());
+            payload.setAvailableSeats(availableSeats);
+
+            // Add startLocationName and endLocationName by retrieving the associated RideLocation entries
+            List<RideLocation> rideLocations = rideLocationRepository.findByRide(ride);
+            if (!rideLocations.isEmpty()) {
+                // Assuming the first RideLocation is the start location and the second is the end location
+                payload.setStartLocationName(rideLocations.get(0).getLocation().getLocationName());
+                if (rideLocations.size() > 1) {
+                    payload.setEndLocationName(rideLocations.get(1).getLocation().getLocationName());
+                }
+            }
+            if (!rideLocations.isEmpty()) {
+                // Assuming the first RideLocation is the start location and the second is the end location
+                payload.setStartLocationId(rideLocations.get(0).getLocation().getLocationId());
+                if (rideLocations.size() > 1) {
+                    payload.setEndLocationId(rideLocations.get(1).getLocation().getLocationId());
+                }
+            }
+            // Add userId by fetching the UserRide with the role 'ORGANIZER'
+            UserRide organizerRide = userRideRepository.findByRideAndRoleInRide(ride, "ORGANIZER");
+            if (organizerRide != null) {
+                payload.setUserId(organizerRide.getUser().getUserId());
+            }
+
+            ridePayloads.add(payload);
+        }
+
+        return ridePayloads;
     }
+
+
+
+
 
     @Override
     public List<RideResponse> getAllRidesByPendingStatus() {
