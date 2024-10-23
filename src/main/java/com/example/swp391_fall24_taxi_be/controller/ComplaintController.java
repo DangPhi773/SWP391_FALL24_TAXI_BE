@@ -67,9 +67,27 @@ public class ComplaintController {
         return ResponseEntity.ok(updatedComplaint);
     }
 
+    @GetMapping("/getFeedback")
+    public ResponseEntity<ComplaintDTO> getFeedbackByUserAndRide(@RequestParam Long userId, @RequestParam Long rideId) {
+        ComplaintDTO feedback = complaintService.getFeedbackByUserAndRide(userId, rideId);
+        return ResponseEntity.ok(feedback);
+    }
+
+
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<Void> deleteComplaint(@PathVariable Long id) {
         complaintService.deleteComplaint(id);
         return ResponseEntity.noContent().build();
     }
+
+    @GetMapping("/{rideId}/user/{userId}")
+    public ResponseEntity<ComplaintDTO> getComplaintByRideAndUser(@PathVariable Long rideId, @PathVariable Long userId) {
+        ComplaintDTO feedback = complaintService.getFeedbackByUserAndRide(userId, rideId);
+        if (feedback != null) {
+            return ResponseEntity.ok(feedback);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
 }

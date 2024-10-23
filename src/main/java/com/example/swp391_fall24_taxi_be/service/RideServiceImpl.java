@@ -227,7 +227,9 @@ public class RideServiceImpl implements RideService {
                 ride.getCapacity(),
                 ride.getPrice(),
                 ride.getStatus(),
-                ride.getPaymentMethod()
+                ride.getPaymentMethod(),
+                ride.getOrganizerUsername(),
+                ride.getParticipantUsernames()
         );
     }
 }

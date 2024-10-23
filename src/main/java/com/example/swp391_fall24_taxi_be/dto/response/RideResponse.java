@@ -5,6 +5,7 @@ import lombok.Data;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Data
 @AllArgsConstructor
@@ -18,4 +19,6 @@ public class RideResponse {
     private Double price;
     private String status;
     private String paymentMethod;
+    private String organizerUsername;
+    private List<String> participantUsernames;
 }

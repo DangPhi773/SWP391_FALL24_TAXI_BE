@@ -7,6 +7,7 @@ import org.springframework.stereotype.Repository;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 
@@ -22,4 +23,7 @@ public interface ComplaintRepository extends JpaRepository<Complaint, Long> {
 
     //Find By Status ("PENDING")
     List<Complaint> findByStatus(String status);
+
+    Optional<Complaint> findByUser_UserIdAndRide_RideId(Long userId, Long rideId);
+
 }

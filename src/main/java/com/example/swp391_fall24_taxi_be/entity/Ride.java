@@ -8,7 +8,9 @@ import lombok.Setter;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Entity
 @Getter
@@ -34,6 +36,23 @@ public class Ride {
 
     @OneToMany(mappedBy = "ride")
     private List<UserRide> userRides;
+
+    public String getOrganizerUsername() {
+        if (userRides != null && !userRides.isEmpty()) {
+            return userRides.get(0).getUser().getFullName();
+        }
+        return null;
+    }
+
+    public List<String> getParticipantUsernames() {
+        if (userRides != null && !userRides.isEmpty()) {
+            return userRides.stream()
+                    .filter(userRide -> userRide.getRoleInRide().equals("PARTICIPANT"))
+                    .map(userRide -> userRide.getUser().getFullName())
+                    .collect(Collectors.toList());
+        }
+        return Collections.emptyList();
+    }
 
     @OneToMany(mappedBy = "ride")
     private List<Transaction> transactions;
