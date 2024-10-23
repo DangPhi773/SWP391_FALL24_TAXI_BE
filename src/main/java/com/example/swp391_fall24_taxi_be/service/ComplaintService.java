@@ -31,4 +31,6 @@ public interface ComplaintService {
     // Delete Complaint (Update Status to "Deactivated")
     void deleteComplaint(Long id);
 
+    ComplaintDTO getFeedbackByUserAndRide(Long userId, Long rideId);
+
 }

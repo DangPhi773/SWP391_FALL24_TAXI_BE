@@ -159,6 +159,19 @@ public class ComplaintServiceImpl implements ComplaintService {
 
     private final List<String> VALID_STATUSES =
             Arrays.asList("ACTIVE", "INACTIVE");
+    @Override
+    public ComplaintDTO getFeedbackByUserAndRide(Long userId, Long rideId) {
+        Complaint complaint = complaintRepository.findByUser_UserIdAndRide_RideId(userId, rideId)
+                .orElseThrow(() -> new RuntimeException("Feedback not found"));
+
+        return new ComplaintDTO(
+                complaint.getComplaintId(),
+                complaint.getDescription(),
+                complaint.getSubmittedDate(),
+                complaint.getRating(),
+                complaint.getStatus());
+    }
+
 
 
     @Override
