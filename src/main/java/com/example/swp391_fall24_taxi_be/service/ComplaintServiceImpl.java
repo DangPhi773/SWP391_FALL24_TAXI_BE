@@ -59,6 +59,22 @@ public class ComplaintServiceImpl implements ComplaintService {
     }
 
     @Override
+    public List<ComplaintDTO> getComplaintByUser(Long userId) {
+        // Tìm tất cả các complaint theo userId
+        List<Complaint> complaints = complaintRepository.findByUser_UserId(userId);
+
+        // Chuyển đổi entity thành DTO
+        return complaints.stream()
+                .map(complaint -> new ComplaintDTO(
+                        complaint.getComplaintId(),
+                        complaint.getDescription(),
+                        complaint.getSubmittedDate(),
+                        complaint.getRating(),
+                        complaint.getStatus()))
+                .collect(Collectors.toList());
+    }
+
+    @Override
     public List<ComplaintDTO> searchByDescription(String description) {
         List<Complaint> complaints = complaintRepository.findByDescriptionContaining(description);
         return complaints.stream()
