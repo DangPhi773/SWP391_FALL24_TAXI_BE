@@ -26,4 +26,6 @@ public interface ComplaintRepository extends JpaRepository<Complaint, Long> {
 
     Optional<Complaint> findByUser_UserIdAndRide_RideId(Long userId, Long rideId);
 
+    List<Complaint> findByUser_UserId(Long userId);
+
 }

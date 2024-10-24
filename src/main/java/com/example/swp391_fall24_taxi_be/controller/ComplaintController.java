@@ -31,6 +31,12 @@ public class ComplaintController {
         return ResponseEntity.ok(complaints);
     }
 
+    @GetMapping("/getComplaintEqualUser/{userId}")
+    public ResponseEntity<List<ComplaintDTO>> getComplaintByUser(@PathVariable Long userId) {
+        List<ComplaintDTO> complaints = complaintService.getComplaintByUser(userId);
+        return ResponseEntity.ok(complaints);
+    }
+
     @GetMapping("/search/description")
     public ResponseEntity<List<ComplaintDTO>> searchByDescription(@RequestParam String description) {
         List<ComplaintDTO> complaints = complaintService.searchByDescription(description);

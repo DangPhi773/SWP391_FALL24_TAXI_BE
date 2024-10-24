@@ -12,6 +12,8 @@ public interface ComplaintService {
 
     List<ComplaintDTO> getAllComplaintsByStaff();
 
+    List<ComplaintDTO> getComplaintByUser(Long userId);
+
     // Search display all status
     List<ComplaintDTO> searchByDescription(String description);
 
